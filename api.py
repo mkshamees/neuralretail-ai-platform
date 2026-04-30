@@ -4,6 +4,7 @@ from pydantic import BaseModel
 import joblib
 import pandas as pd
 
+
 app = FastAPI(title="NeuralRetail ML API", version="1.0")
 
 # ---------------- LOAD MODEL ----------------
@@ -20,6 +21,16 @@ class ChurnRequest(BaseModel):
 @app.get("/health")
 def health():
     return {"status": "API running"}
+
+@app.get("/")
+def home():
+    return {
+        "message": "NeuralRetail API is running",
+        "status": "active",
+        "docs": "/docs",
+        "health": "/health",
+        "predict": "/predict/churn"
+    }
 
 # ---------------- PREDICT CHURN ----------------
 @app.post("/predict/churn")
