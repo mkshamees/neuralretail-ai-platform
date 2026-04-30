@@ -43,8 +43,11 @@ def predict_churn(data: ChurnRequest):
     ]]
 
     prediction = model.predict(input_data)[0]
+    proba = model.predict_proba(input_data)[0][1]
 
     return {
-        "churn_prediction": int(prediction),
-        "label": "High Risk" if prediction == 1 else "Low Risk"
-    }
+    "churn_prediction": int(prediction),
+    "probability": float(proba),
+    "label": "High Risk" if prediction == 1 else "Low Risk"
+}
+
