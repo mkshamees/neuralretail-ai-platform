@@ -64,11 +64,12 @@ elif page == "Customer Hub":
         }
 
         try:
-            response = requests.post(
-                "http://127.0.0.1:8000/predict/churn",
-                json=payload
-            )
+           API_URL = "https://neuralretail-ai-platform.onrender.com"
 
+response = requests.post(
+    f"{API_URL}/predict/churn",
+    json=payload
+)
             result = response.json()
 
             if result["churn_prediction"] == 1:
