@@ -152,7 +152,7 @@ try:
 
         st.plotly_chart(fig, use_container_width=True)
 
-    # ---------------- PREDICTION ----------------
+    # ---------------- PREDICTION RESULT ----------------
     if result.get("churn_prediction") == 1:
         st.error("⚠ High Risk Customer")
 
@@ -175,7 +175,7 @@ try:
 
 except Exception as e:
     st.error(f"API Error: {e}")
-
+    
 # ---------------- INVENTORY ----------------
 
 elif page == "Inventory":
