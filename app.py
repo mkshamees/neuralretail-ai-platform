@@ -150,7 +150,7 @@ elif page == "Customer Hub":
 
     try:
         with st.spinner("🧠 AI model analyzing customer behavior..."):
-        response = requests.post(
+            response = requests.post(
             f"{API_URL}/predict/churn",
             json=payload
         )
