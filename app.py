@@ -89,6 +89,7 @@ elif page == "Demand Intelligence":
     st.plotly_chart(fig, use_container_width=True)
     st.success("AI insight: Demand shows stable trend with mild seasonality.")
 # ---------------- CUSTOMER (API CONNECTED) ----------------
+# ---------------- CUSTOMER (API CONNECTED) ----------------
 elif page == "Customer Hub":
     st.header("Customer Intelligence & Churn Prediction")
 
@@ -103,38 +104,39 @@ elif page == "Customer Hub":
             "frequency": frequency,
             "monetary": monetary
         }
-    API_URL = "https://neuralretail-ai-platform.onrender.com"
 
-    try:
-        with st.spinner("🧠 AI model analyzing customer behavior..."):
-            response = requests.post(
-            f"{API_URL}/predict/churn",
-            json=payload
-        )
+        API_URL = "https://neuralretail-ai-platform.onrender.com"
 
-        result = response.json()
+        try:
+            with st.spinner("🧠 AI model analyzing customer behavior..."):
+                response = requests.post(
+                    f"{API_URL}/predict/churn",
+                    json=payload
+                )
 
-        if result.get("prediction") == 1:
-            st.error("⚠ High Risk Customer Detected")
+            result = response.json()
 
-            st.markdown("""
-        ### Recommended Action:
-        - Send discount offer (10–20%)
-        - Run re-engagement campaign
-        - Add to recovery segment
-        """)
-        else:
-            st.success("Low Risk Customer")
+            if result.get("prediction") == 1:
+                st.error("⚠ High Risk Customer Detected")
 
-            st.markdown("""
-            ### Recommended Action:
-            - Upsell premium products
-            - Maintain engagement
-            - Offer loyalty rewards
-            """)
-    except Exception as e:
-       st.error(f"API Error: {e}")
+                st.markdown("""
+                ### Recommended Action:
+                - Send discount offer (10–20%)
+                - Run re-engagement campaign
+                - Add to recovery segment
+                """)
+            else:
+                st.success("Low Risk Customer")
 
+                st.markdown("""
+                ### Recommended Action:
+                - Upsell premium products
+                - Maintain engagement
+                - Offer loyalty rewards
+                """)
+
+        except Exception as e:
+            st.error(f"API Error: {e}")
 # ---------------- INVENTORY ----------------
 elif page == "Inventory":
     st.header("Inventory Insights")
