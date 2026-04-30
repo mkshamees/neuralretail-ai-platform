@@ -105,13 +105,14 @@ if page == "Executive Overview":
     )
 
     st.plotly_chart(fig, use_container_width=True)
-st.markdown("### 🧠 AI Business Insight")
+    st.markdown("### 🧠 AI Business Insight")
 
-st.info("""
-- Revenue trend is stable with moderate growth
-- Customer base is healthy and diversified
-- Recommendation: Focus on mid-value customer retention
-""")
+    st.info("""
+    - Revenue trend is stable with moderate growth
+    - Customer base is healthy and diversified
+    - Recommendation: Focus on mid-value customer retention
+    """)
+
 # ---------------- DEMAND ----------------
 elif page == "Demand Intelligence":
     st.header("Demand Intelligence")
