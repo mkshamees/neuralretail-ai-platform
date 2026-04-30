@@ -112,8 +112,6 @@ st.info("""
 - Customer base is healthy and diversified
 - Recommendation: Focus on mid-value customer retention
 """)
-
-
 # ---------------- DEMAND ----------------
 elif page == "Demand Intelligence":
     st.header("Demand Intelligence")
@@ -131,7 +129,7 @@ elif page == "Demand Intelligence":
     )
 
     st.plotly_chart(fig, use_container_width=True)
-st.success("AI insight: Demand shows stable trend with mild seasonality.")
+    st.success("AI insight: Demand shows stable trend with mild seasonality.")
 # ---------------- CUSTOMER (API CONNECTED) ----------------
 elif page == "Customer Hub":
     st.header("Customer Intelligence & Churn Prediction")
@@ -190,7 +188,7 @@ elif page == "Inventory":
     st.markdown("### Stock Movement Trend")
 
     st.line_chart(stock)
-st.success("Stock levels are stable with no critical shortages detected.")
+    st.success("Stock levels are stable with no critical shortages detected.")
 
 # ---------------- MLOPS ----------------
 elif page == "MLOps Monitor":
@@ -201,6 +199,6 @@ elif page == "MLOps Monitor":
     col1.metric("PSI Score", 0.12)
     col2.metric("MAPE", "8.5%")
     col3.metric("Model Status", "Healthy")
-st.success("System is healthy and model performance is within acceptable range.")
+    st.success("System is healthy and model performance is within acceptable range.")
 
     st.success("All systems operational ✔")
