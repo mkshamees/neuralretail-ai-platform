@@ -1,34 +1,39 @@
-import os
-import joblib
+
 from fastapi import FastAPI
+from pydantic import BaseModel
+import joblib
+import pandas as pd
 
-app = FastAPI()
+app = FastAPI(title="NeuralRetail ML API", version="1.0")
 
+# ---------------- LOAD MODEL ----------------
 model_path = "churn_model.pkl"
-
-# Safe loading
-if not os.path.exists(model_path):
-    raise FileNotFoundError(f"Model not found at {model_path}")
-
 model = joblib.load(model_path)
 
+# ---------------- REQUEST SCHEMA ----------------
+class ChurnRequest(BaseModel):
+    recency: float
+    frequency: float
+    monetary: float
 
-@app.get("/")
-def home():
-    return {"status": "API running"}
-
-
+# ---------------- HEALTH CHECK ----------------
 @app.get("/health")
 def health():
     return {"status": "API running"}
 
-
+# ---------------- PREDICT CHURN ----------------
 @app.post("/predict/churn")
-def predict(data: dict):
-    recency = data.get("recency", 0)
-    frequency = data.get("frequency", 0)
-    monetary = data.get("monetary", 0)
+def predict_churn(data: ChurnRequest):
 
-    pred = model.predict([[recency, frequency, monetary]])[0]
+    input_data = [[
+        data.recency,
+        data.frequency,
+        data.monetary
+    ]]
 
-    return {"prediction": int(pred)}
+    prediction = model.predict(input_data)[0]
+
+    return {
+        "churn_prediction": int(prediction),
+        "label": "High Risk" if prediction == 1 else "Low Risk"
+    }
