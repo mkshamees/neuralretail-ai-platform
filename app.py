@@ -43,10 +43,8 @@ def load_data():
 
         sales["InvoiceDate"] = pd.to_datetime(sales["InvoiceDate"])
 
-        return sales, rfm
-
-    except Exception:
-        st.warning("⚠ Data not found — running demo mode")
+    except Exception as e:
+        st.warning("⚠ Using fallback demo data")
 
         sales = pd.DataFrame({
             "InvoiceDate": pd.date_range("2024-01-01", periods=10),
@@ -55,40 +53,29 @@ def load_data():
 
         rfm = pd.DataFrame({"CustomerID": range(10)})
 
-        return sales, rfm
-# ----------------  ----------------
+    return sales, rfm
+# ---------------- NN ----------------
 daily_sales, rfm = load_data()
 
-st.write("✅ Data Loaded:", daily_sales.shape)
+st.write("DATA SHAPE:", daily_sales.shape, rfm.shape)
 
 # ---------------- EXECUTIVE ----------------
-if page == "🏠 Executive Overview":
+if page == "Executive Overview":
     st.header("Executive Dashboard")
+
+    if daily_sales.empty or rfm.empty:
+        st.error("No data available")
+        st.stop()
+
+    total_revenue = float(daily_sales["TotalPrice"].sum())
 
     col1, col2, col3 = st.columns(3)
 
-    col1.metric("💰 Revenue", f"{daily_sales['TotalPrice'].sum():,.0f}", "+5%")
-    col2.metric("📦 Orders", len(daily_sales), "+2%")
-    col3.metric("👥 Customers", rfm.shape[0], "+3%")
+    col1.metric("💰 Revenue", f"{total_revenue:,.0f}")
+    col2.metric("📦 Orders", len(daily_sales))
+    col3.metric("👥 Customers", len(rfm))
 
-    st.markdown("### Revenue Trend")
-
-    fig = px.line(
-        daily_sales,
-        x="InvoiceDate",
-        y="TotalPrice",
-        title="Revenue Over Time"
-    )
-
-    st.plotly_chart(fig, use_container_width=True)
-
-    st.markdown("### 🧠 AI Business Insight")
-
-    st.info("""
-    - Revenue trend is stable with moderate growth  
-    - Customer base is healthy and diversified  
-    - Recommendation: Focus on mid-value customer retention  
-    """)
+    st.success("Executive page loaded")
 
 # ---------------- DEMAND ----------------
 elif page == "📈 Demand Intelligence":
