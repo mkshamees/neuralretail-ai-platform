@@ -52,7 +52,12 @@ def load_data():
 
     return sales, rfm
 
-    daily_sales, rfm = load_data()
+# ----------------  ----------------
+daily_sales, rfm = load_data()
+
+if daily_sales.empty or rfm.empty:
+    st.warning("⚠ Data not loaded properly. Check data folder.")
+    st.stop()
 
 # ---------------- EXECUTIVE ----------------
 if page == "Executive Overview":
@@ -63,10 +68,6 @@ if page == "Executive Overview":
     col1.metric("💰 Revenue", f"{daily_sales['TotalPrice'].sum():,.0f}", "+5%")
     col2.metric("📦 Orders", len(daily_sales), "+2%")
     col3.metric("👥 Customers", rfm.shape[0], "+3%")
-
-if daily_sales.empty or rfm.empty:
-    st.warning("⚠ Data not loaded properly. Check data folder.")
-    st.stop()
 
     st.markdown("### Revenue Trend")
 
@@ -105,7 +106,6 @@ elif page == "Demand Intelligence":
 
     st.plotly_chart(fig, use_container_width=True)
     st.success("AI insight: Demand shows stable trend with mild seasonality.")
-# ---------------- CUSTOMER (API CONNECTED) ----------------
 # ---------------- CUSTOMER (API CONNECTED) ----------------
 elif page == "Customer Hub":
     st.header("Customer Intelligence & Churn Prediction")
