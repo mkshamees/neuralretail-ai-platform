@@ -146,16 +146,16 @@ elif page == "Customer Hub":
             "frequency": frequency,
             "monetary": monetary
         }
- API_URL = "https://neuralretail-ai-platform.onrender.com"
+     API_URL = "https://neuralretail-ai-platform.onrender.com"
 
-try:
-    with st.spinner("🧠 AI model analyzing customer behavior..."):
+    try:
+        with st.spinner("🧠 AI model analyzing customer behavior..."):
         response = requests.post(
             f"{API_URL}/predict/churn",
             json=payload
         )
 
-    result = response.json()
+        result = response.json()
 
     if result.get("prediction") == 1:
         st.error("⚠ High Risk Customer Detected")
