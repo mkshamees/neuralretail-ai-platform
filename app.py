@@ -30,6 +30,8 @@ page = st.sidebar.radio(
 st.sidebar.markdown("---")
 st.sidebar.info("AI-powered Retail Intelligence System")
 
+st.write("DEBUG PAGE:", page)   # 👈 ADD THIS LINE HERE
+
 # ---------------- LOAD DATA ----------------
 @st.cache_data
 def load_data():
