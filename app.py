@@ -166,15 +166,15 @@ elif page == "Customer Hub":
         - Run re-engagement campaign
         - Add to recovery segment
         """)
-else:
-    st.success("Low Risk Customer")
+        else:
+            st.success("Low Risk Customer")
 
-    st.markdown("""
-        ### Recommended Action:
-        - Upsell premium products
-        - Maintain engagement
-        - Offer loyalty rewards
-        """)
+            st.markdown("""
+            ### Recommended Action:
+            - Upsell premium products
+            - Maintain engagement
+            - Offer loyalty rewards
+            """)
 
 except Exception as e:
     st.error(f"API Error: {e}")
