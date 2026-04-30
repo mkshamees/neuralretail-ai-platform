@@ -3,6 +3,7 @@ import pandas as pd
 import joblib
 import requests
 import plotly.express as px
+st.write("🚀 App started")
 
 # ---------------- PAGE CONFIG ----------------
 st.set_page_config(
@@ -33,13 +34,23 @@ st.sidebar.info("AI-powered Retail Intelligence System")
 # ---------------- LOAD DATA ----------------
 @st.cache_data
 def load_data():
-    base = "data"
-    sales = pd.read_csv(f"{base}/retail_features.csv")
-    rfm = pd.read_csv(f"{base}/rfm_table.csv")
-    sales["InvoiceDate"] = pd.to_datetime(sales["InvoiceDate"])
-    return sales, rfm
+    import os
 
-daily_sales, rfm = load_data()
+    base = "data"
+
+    sales_path = os.path.join(base, "retail_features.csv")
+    rfm_path = os.path.join(base, "rfm_table.csv")
+
+    if not os.path.exists(sales_path):
+        st.error(f"Missing file: {sales_path}")
+        return pd.DataFrame(), pd.DataFrame()
+
+    sales = pd.read_csv(sales_path)
+    rfm = pd.read_csv(rfm_path)
+
+    sales["InvoiceDate"] = pd.to_datetime(sales["InvoiceDate"])
+
+    return sales, rfm
 
 # ---------------- EXECUTIVE ----------------
 if page == "Executive Overview":
