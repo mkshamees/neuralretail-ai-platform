@@ -113,68 +113,83 @@ elif page == "Demand Intelligence":
     st.plotly_chart(fig, use_container_width=True)
 
 # ---------------- CUSTOMER ----------------
-try:
-    with st.spinner("🧠 AI model analyzing customer behavior..."):
-        response = requests.post(
-            f"{API_URL}/predict/churn",
-            json=payload
-        )
+elif page == "Customer Hub":
+    st.header("Customer Intelligence & Churn Prediction")
 
-    result = response.json()
+    recency = st.number_input("Recency", 10)
+    frequency = st.number_input("Frequency", 5)
+    monetary = st.number_input("Monetary", 500)
 
-    st.success("Prediction completed successfully")
+    if st.button("Predict Churn"):
 
-    # ---------------- CONFIDENCE ----------------
-    confidence = result.get("probability", 0.75)
-    st.progress(int(confidence * 100))
-    st.write(f"Model Confidence: {confidence:.2f}")
+        payload = {
+            "recency": recency,
+            "frequency": frequency,
+            "monetary": monetary
+        }
 
-    # ---------------- FEATURE IMPORTANCE ----------------
-    importance = result.get("feature_importance", {})
+        API_URL = "https://neuralretail-ai-platform.onrender.com"
 
-    if importance:
-        st.subheader("Why this prediction?")
+        # 👇 THIS IS WHERE YOUR TRY BELONGS
+        try:
+            with st.spinner("🧠 AI model analyzing customer behavior..."):
+                response = requests.post(
+                    f"{API_URL}/predict/churn",
+                    json=payload
+                )
 
-        import pandas as pd
-        import plotly.express as px
+            result = response.json()
 
-        df_imp = pd.DataFrame({
-            "Feature": list(importance.keys()),
-            "Importance": list(importance.values())
-        })
+            st.success("Prediction completed successfully")
 
-        fig = px.bar(
-            df_imp,
-            x="Feature",
-            y="Importance",
-            title="Feature Importance"
-        )
+            # ---------------- CONFIDENCE ----------------
+            confidence = result.get("probability", 0.75)
+            st.progress(int(confidence * 100))
+            st.write(f"Model Confidence: {confidence:.2f}")
 
-        st.plotly_chart(fig, use_container_width=True)
+            # ---------------- FEATURE IMPORTANCE ----------------
+            importance = result.get("feature_importance", {})
 
-    # ---------------- PREDICTION RESULT ----------------
-    if result.get("churn_prediction") == 1:
-        st.error("⚠ High Risk Customer")
+            if importance:
+                st.subheader("Why this prediction?")
 
-        st.markdown("""
-        **Recommended Actions:**
-        - Discount campaign (10–20%)
-        - Re-engagement marketing
-        - Recovery segmentation
-        """)
+                df_imp = pd.DataFrame({
+                    "Feature": list(importance.keys()),
+                    "Importance": list(importance.values())
+                })
 
-    else:
-        st.success("Low Risk Customer")
+                fig = px.bar(
+                    df_imp,
+                    x="Feature",
+                    y="Importance",
+                    title="Feature Importance"
+                )
 
-        st.markdown("""
-        **Recommended Actions:**
-        - Upsell premium products
-        - Loyalty rewards
-        - Engagement retention
-        """)
+                st.plotly_chart(fig, use_container_width=True)
 
-except Exception as e:
-    st.error(f"API Error: {e}")
+            # ---------------- PREDICTION RESULT ----------------
+            if result.get("churn_prediction") == 1:
+                st.error("⚠ High Risk Customer")
+
+                st.markdown("""
+                **Recommended Actions:**
+                - Discount campaign (10–20%)
+                - Re-engagement marketing
+                - Recovery segmentation
+                """)
+
+            else:
+                st.success("Low Risk Customer")
+
+                st.markdown("""
+                **Recommended Actions:**
+                - Upsell premium products
+                - Loyalty rewards
+                - Engagement retention
+                """)
+
+        except Exception as e:
+            st.error(f"API Error: {e}")
     
 # ---------------- INVENTORY ----------------
 
