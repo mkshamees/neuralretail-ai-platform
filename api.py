@@ -7,7 +7,7 @@ import pandas as pd
 app = FastAPI(title="NeuralRetail ML API", version="1.0")
 
 # ---------------- LOAD MODEL ----------------
-model_path = "/content/drive/MyDrive/NeuralRetail/models/churn_model.pkl"
+model_path = "churn_model.pkl"
 model = joblib.load(model_path)
 
 # ---------------- REQUEST SCHEMA ----------------
