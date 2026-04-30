@@ -177,6 +177,7 @@ except Exception as e:
     st.error(f"API Error: {e}")
 
 # ---------------- INVENTORY ----------------
+
 elif page == "Inventory":
     st.header("Inventory Insights")
     st.subheader("Stock Movement Analytics")
@@ -186,6 +187,7 @@ elif page == "Inventory":
     st.line_chart(stock)
 
 # ---------------- MLOPS ----------------
+
 elif page == "MLOps Monitor":
     st.header("Model Monitoring")
     st.subheader("Model Health Overview")
