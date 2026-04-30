@@ -1,15 +1,20 @@
-
 import streamlit as st
 import pandas as pd
 import joblib
 import requests
 import plotly.express as px
 
-    st.set_page_config(
-    
-    st.sidebar.title("📊 NeuralRetail AI")
+# ---------------- PAGE CONFIG ----------------
+st.set_page_config(
+    page_title="NeuralRetail AI Platform",
+    layout="wide",
+    initial_sidebar_state="expanded"
+)
 
-    st.sidebar.markdown("---")
+# ---------------- SIDEBAR ----------------
+st.sidebar.title("📊 NeuralRetail AI")
+
+st.sidebar.markdown("---")
 
 page = st.sidebar.radio(
     "Navigation",
@@ -56,12 +61,13 @@ if page == "Executive Overview":
     )
 
     st.plotly_chart(fig, use_container_width=True)
+
     st.markdown("### 🧠 AI Business Insight")
 
     st.info("""
-    - Revenue trend is stable with moderate growth
-    - Customer base is healthy and diversified
-    - Recommendation: Focus on mid-value customer retention
+    - Revenue trend is stable with moderate growth  
+    - Customer base is healthy and diversified  
+    - Recommendation: Focus on mid-value customer retention  
     """)
 
 # ---------------- DEMAND ----------------
