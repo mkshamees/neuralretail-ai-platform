@@ -3,7 +3,6 @@ import pandas as pd
 import joblib
 import requests
 import plotly.express as px
-st.write("🚀 App started")
 
 # ---------------- PAGE CONFIG ----------------
 st.set_page_config(
@@ -37,7 +36,6 @@ def load_data():
     import os
 
     base = "data"
-
     sales_path = os.path.join(base, "retail_features.csv")
     rfm_path = os.path.join(base, "rfm_table.csv")
 
@@ -51,7 +49,6 @@ def load_data():
     sales["InvoiceDate"] = pd.to_datetime(sales["InvoiceDate"])
 
     return sales, rfm
-
 # ----------------  ----------------
 daily_sales, rfm = load_data()
 
