@@ -29,12 +29,12 @@ page = st.sidebar.radio(
 )
 
 st.sidebar.info("NeuralRetail AI System")
-    st.sidebar.markdown("---")
+st.sidebar.markdown("---")
 
-    st.sidebar.subheader("System Status")
-    st.sidebar.success("API Connected ✔")
-    st.sidebar.success("Model Loaded ✔")
-    st.sidebar.info("Version: v1.0.0")
+st.sidebar.subheader("System Status")
+st.sidebar.success("API Connected ✔")
+st.sidebar.success("Model Loaded ✔")
+st.sidebar.info("Version: v1.0.0")
 
 # ---------------- SAFE DATA LOADER ----------------
 @st.cache_data
@@ -167,6 +167,7 @@ elif page == "Customer Hub":
 # ---------------- INVENTORY ----------------
 elif page == "Inventory":
     st.header("Inventory Insights")
+    st.subheader("Stock Movement Analytics")
 
     stock = daily_sales.groupby("InvoiceDate")["TotalPrice"].sum()
 
@@ -175,6 +176,8 @@ elif page == "Inventory":
 # ---------------- MLOPS ----------------
 elif page == "MLOps Monitor":
     st.header("Model Monitoring")
+    st.subheader("Model Health Overview")
+    st.caption("Real-time monitoring of deployed ML model")
 
     col1, col2, col3 = st.columns(3)
 
