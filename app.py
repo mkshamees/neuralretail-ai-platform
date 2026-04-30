@@ -113,78 +113,68 @@ elif page == "Demand Intelligence":
     st.plotly_chart(fig, use_container_width=True)
 
 # ---------------- CUSTOMER ----------------
-elif page == "Customer Hub":
-    st.header("Customer Intelligence & Churn Prediction")
+try:
+    with st.spinner("🧠 AI model analyzing customer behavior..."):
+        response = requests.post(
+            f"{API_URL}/predict/churn",
+            json=payload
+        )
 
-    recency = st.number_input("Recency", value=10)
-    frequency = st.number_input("Frequency", value=5)
-    monetary = st.number_input("Monetary", value=500)
+    result = response.json()
 
-    if st.button("Predict Churn"):
+    st.success("Prediction completed successfully")
 
-        payload = {
-            "recency": recency,
-            "frequency": frequency,
-            "monetary": monetary
-        }
+    # ---------------- CONFIDENCE ----------------
+    confidence = result.get("probability", 0.75)
+    st.progress(int(confidence * 100))
+    st.write(f"Model Confidence: {confidence:.2f}")
 
-        API_URL = "https://neuralretail-ai-platform.onrender.com"
+    # ---------------- FEATURE IMPORTANCE ----------------
+    importance = result.get("feature_importance", {})
 
-        try:
-            with st.spinner("Analyzing customer behavior..."):
-                response = requests.post(
-                    f"{API_URL}/predict/churn",
-                    json=payload,
-                    timeout=10
-                )
+    if importance:
+        st.subheader("Why this prediction?")
 
-            result = response.json()
-            importance = result.get("feature_importance", {})
+        import pandas as pd
+        import plotly.express as px
 
-if importance:
-    st.subheader("Why this prediction?")
+        df_imp = pd.DataFrame({
+            "Feature": list(importance.keys()),
+            "Importance": list(importance.values())
+        })
 
-    import pandas as pd
-    import plotly.express as px
+        fig = px.bar(
+            df_imp,
+            x="Feature",
+            y="Importance",
+            title="Feature Importance"
+        )
 
-    df_imp = pd.DataFrame({
-        "Feature": list(importance.keys()),
-        "Importance": list(importance.values())
-    })
+        st.plotly_chart(fig, use_container_width=True)
 
-    fig = px.bar(
-        df_imp,
-        x="Feature",
-        y="Importance",
-        title="Feature Importance"
-    )
+    # ---------------- PREDICTION ----------------
+    if result.get("churn_prediction") == 1:
+        st.error("⚠ High Risk Customer")
 
-    st.plotly_chart(fig, use_container_width=True)
-    
-            st.success("Prediction completed successfully")
+        st.markdown("""
+        **Recommended Actions:**
+        - Discount campaign (10–20%)
+        - Re-engagement marketing
+        - Recovery segmentation
+        """)
 
-            if result.get("churn_prediction") == 1:
-                st.error("⚠ High Risk Customer")
+    else:
+        st.success("Low Risk Customer")
 
-                st.markdown("""
-                **Recommended Actions:**
-                - Discount campaign (10–20%)
-                - Re-engagement marketing
-                - Recovery segmentation
-                """)
+        st.markdown("""
+        **Recommended Actions:**
+        - Upsell premium products
+        - Loyalty rewards
+        - Engagement retention
+        """)
 
-            else:
-                st.success("Low Risk Customer")
-
-                st.markdown("""
-                **Recommended Actions:**
-                - Upsell premium products
-                - Loyalty rewards
-                - Engagement retention
-                """)
-
-        except Exception as e:
-            st.error(f"API Error: {e}")
+except Exception as e:
+    st.error(f"API Error: {e}")
 
 # ---------------- INVENTORY ----------------
 elif page == "Inventory":
