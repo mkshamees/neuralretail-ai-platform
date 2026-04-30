@@ -42,7 +42,7 @@ def load_data():
     rfm_path = os.path.join(base, "rfm_table.csv")
 
     if not os.path.exists(sales_path):
-        st.error(f"Missing file: {sales_path}")
+        st.error("Missing retail_features.csv")
         return pd.DataFrame(), pd.DataFrame()
 
     sales = pd.read_csv(sales_path)
@@ -51,6 +51,7 @@ def load_data():
     sales["InvoiceDate"] = pd.to_datetime(sales["InvoiceDate"])
 
     return sales, rfm
+
     daily_sales, rfm = load_data()
 
 # ---------------- EXECUTIVE ----------------
