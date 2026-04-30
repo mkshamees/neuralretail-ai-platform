@@ -166,10 +166,10 @@ elif page == "Customer Hub":
         - Run re-engagement campaign
         - Add to recovery segment
         """)
-    else:
-        st.success("Low Risk Customer")
+else:
+    st.success("Low Risk Customer")
 
-        st.markdown("""
+    st.markdown("""
         ### Recommended Action:
         - Upsell premium products
         - Maintain engagement
