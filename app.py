@@ -91,40 +91,36 @@ elif page == "Demand Intelligence":
 elif page == "Customer Hub":
     st.header("Customer Intelligence & Churn Prediction")
 
-    col1, col2, col3 = st.columns(3)
+    recency = st.number_input("Recency", 10)
+    frequency = st.number_input("Frequency", 5)
+    monetary = st.number_input("Monetary", 500)
 
-    recency = col1.number_input("Recency", 10)
-    frequency = col2.number_input("Frequency", 5)
-    monetary = col3.number_input("Monetary", 500)
+    if st.button("Predict Churn"):
 
-   if st.button("Predict Churn"):
+        payload = {
+            "recency": recency,
+            "frequency": frequency,
+            "monetary": monetary
+        }
 
-    payload = {
-        "recency": recency,
-        "frequency": frequency,
-        "monetary": monetary
-    }
+        API_URL = "https://neuralretail-ai-platform.onrender.com"
 
-    API_URL = "https://neuralretail-ai-platform.onrender.com"
+        try:
+            with st.spinner("Analyzing customer risk..."):
+                response = requests.post(
+                    f"{API_URL}/predict/churn",
+                    json=payload
+                )
 
-    try:
-        with st.spinner("Analyzing customer risk..."):
-            response = requests.post(
-                f"{API_URL}/predict/churn",
-                json=payload
-            )
+            result = response.json()
 
-        result = response.json()
+            if result.get("prediction") == 1:
+                st.error("⚠ High Risk Customer")
+            else:
+                st.success("Low Risk Customer")
 
-        if result.get("prediction") == 1:
-            st.error("⚠ High Risk Customer")
-            st.markdown("Recommended: Discount + Re-engagement campaign")
-        else:
-            st.success("Low Risk Customer")
-            st.markdown("Recommended: Upsell premium products")
-
-    except Exception as e:
-        st.error(f"API Error: {e}")
+        except Exception as e:
+            st.error(f"API Error: {e}")  
 
 # ---------------- INVENTORY ----------------
 elif page == "Inventory":
