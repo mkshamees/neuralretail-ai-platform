@@ -19,11 +19,11 @@ st.sidebar.markdown("---")
 page = st.sidebar.radio(
     "Navigation",
     [
-        "🏠 Executive Overview",
-        "📈 Demand Intelligence",
-        "👥 Customer Hub",
-        "📦 Inventory",
-        "🧠 MLOps Monitor"
+        "Executive Overview",
+        "Demand Intelligence",
+        "Customer Hub",
+        "Inventory",
+        "MLOps Monitor"
     ]
 )
 
@@ -60,7 +60,7 @@ daily_sales, rfm = load_data()
 st.write("✅ Data Loaded:", daily_sales.shape)
 
 # ---------------- EXECUTIVE ----------------
-if page == "Executive Overview":
+if page == "🏠 Executive Overview":
     st.header("Executive Dashboard")
 
     col1, col2, col3 = st.columns(3)
@@ -89,7 +89,7 @@ if page == "Executive Overview":
     """)
 
 # ---------------- DEMAND ----------------
-elif page == "Demand Intelligence":
+elif page == "📈 Demand Intelligence":
     st.header("Demand Intelligence")
 
     df = daily_sales.copy()
@@ -107,7 +107,7 @@ elif page == "Demand Intelligence":
     st.plotly_chart(fig, use_container_width=True)
     st.success("AI insight: Demand shows stable trend with mild seasonality.")
 # ---------------- CUSTOMER (API CONNECTED) ----------------
-elif page == "Customer Hub":
+elif page == "👥 Customer Hub":
     st.header("Customer Intelligence & Churn Prediction")
 
     recency = st.number_input("Recency", 10)
@@ -155,7 +155,7 @@ elif page == "Customer Hub":
         except Exception as e:
             st.error(f"API Error: {e}")
 # ---------------- INVENTORY ----------------
-elif page == "Inventory":
+elif page == "📦 Inventory":
     st.header("Inventory Insights")
 
     stock = daily_sales.groupby("InvoiceDate")["TotalPrice"].sum()
@@ -166,7 +166,7 @@ elif page == "Inventory":
     st.success("Stock levels are stable with no critical shortages detected.")
 
 # ---------------- MLOPS ----------------
-elif page == "MLOps Monitor":
+elif page == "🧠 MLOps Monitor":
     st.header("Model Monitoring Dashboard")
 
     col1, col2, col3 = st.columns(3)
