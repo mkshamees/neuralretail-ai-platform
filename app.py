@@ -18,7 +18,7 @@ page = st.sidebar.radio(
 # ---------------- LOAD DATA ----------------
 @st.cache_data
 def load_data():
-    base = "/content/drive/MyDrive/NeuralRetail/data/gold"
+    base = "data"
     sales = pd.read_csv(f"{base}/retail_features.csv")
     rfm = pd.read_csv(f"{base}/rfm_table.csv")
     sales["InvoiceDate"] = pd.to_datetime(sales["InvoiceDate"])
