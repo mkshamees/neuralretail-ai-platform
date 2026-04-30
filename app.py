@@ -1,8 +1,8 @@
 import streamlit as st
 import pandas as pd
-import joblib
 import requests
 import plotly.express as px
+import os
 
 # ---------------- PAGE CONFIG ----------------
 st.set_page_config(
@@ -11,13 +11,14 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# ---------------- SIDEBAR ----------------
-st.sidebar.title("📊 NeuralRetail AI")
+st.title("📊 NeuralRetail AI Platform")
+st.caption("AI-powered Retail Intelligence & Customer Analytics System")
 
-st.sidebar.markdown("---")
+# ---------------- SIDEBAR ----------------
+st.sidebar.title("Navigation")
 
 page = st.sidebar.radio(
-    "Navigation",
+    "Select Page",
     [
         "Executive Overview",
         "Demand Intelligence",
@@ -27,64 +28,67 @@ page = st.sidebar.radio(
     ]
 )
 
-st.sidebar.markdown("---")
-st.sidebar.info("AI-powered Retail Intelligence System")
+st.sidebar.info("NeuralRetail AI System")
 
-st.write("DEBUG PAGE:", page)   # 👈 ADD THIS LINE HERE
-
-# ---------------- LOAD DATA ----------------
+# ---------------- SAFE DATA LOADER ----------------
 @st.cache_data
 def load_data():
-    import os
-
     try:
-        sales = pd.read_csv("data/retail_features.csv")
-        rfm = pd.read_csv("data/rfm_table.csv")
+        sales_path = "data/retail_features.csv"
+        rfm_path = "data/rfm_table.csv"
+
+        if not os.path.exists(sales_path) or not os.path.exists(rfm_path):
+            raise FileNotFoundError("Missing data files")
+
+        sales = pd.read_csv(sales_path)
+        rfm = pd.read_csv(rfm_path)
 
         sales["InvoiceDate"] = pd.to_datetime(sales["InvoiceDate"])
 
-    except Exception as e:
-        st.warning("⚠ Using fallback demo data")
+    except Exception:
+        st.warning("⚠ Running in demo mode (data not found on server)")
 
         sales = pd.DataFrame({
-            "InvoiceDate": pd.date_range("2024-01-01", periods=10),
-            "TotalPrice": [100,120,90,300,250,400,350,500,450,600]
+            "InvoiceDate": pd.date_range("2024-01-01", periods=12),
+            "TotalPrice": [100,120,90,300,250,400,350,500,450,600,700,800]
         })
 
         rfm = pd.DataFrame({"CustomerID": range(10)})
 
     return sales, rfm
-# ---------------- NN ----------------
-daily_sales, rfm = load_data()
 
-st.write("DATA SHAPE:", daily_sales.shape, rfm.shape)
+
+daily_sales, rfm = load_data()
 
 # ---------------- EXECUTIVE ----------------
 if page == "Executive Overview":
     st.header("Executive Dashboard")
 
-    if daily_sales.empty or rfm.empty:
-        st.error("No data available")
-        st.stop()
-
-    total_revenue = float(daily_sales["TotalPrice"].sum())
+    revenue = float(daily_sales["TotalPrice"].sum())
+    orders = len(daily_sales)
+    customers = len(rfm)
 
     col1, col2, col3 = st.columns(3)
 
-    col1.metric("💰 Revenue", f"{total_revenue:,.0f}")
-    col2.metric("📦 Orders", len(daily_sales))
-    col3.metric("👥 Customers", len(rfm))
+    col1.metric("💰 Revenue", f"{revenue:,.0f}")
+    col2.metric("📦 Orders", orders)
+    col3.metric("👥 Customers", customers)
 
-    st.success("Executive page loaded")
+    fig = px.line(
+        daily_sales,
+        x="InvoiceDate",
+        y="TotalPrice",
+        title="Revenue Trend"
+    )
+
+    st.plotly_chart(fig, use_container_width=True)
 
 # ---------------- DEMAND ----------------
-elif page == "📈 Demand Intelligence":
+elif page == "Demand Intelligence":
     st.header("Demand Intelligence")
 
     df = daily_sales.copy()
     df["Forecast"] = df["TotalPrice"].rolling(7, min_periods=1).mean()
-
-    st.markdown("### Actual vs Forecast")
 
     fig = px.line(
         df,
@@ -94,14 +98,14 @@ elif page == "📈 Demand Intelligence":
     )
 
     st.plotly_chart(fig, use_container_width=True)
-    st.success("AI insight: Demand shows stable trend with mild seasonality.")
-# ---------------- CUSTOMER (API CONNECTED) ----------------
-elif page == "👥 Customer Hub":
+
+# ---------------- CUSTOMER ----------------
+elif page == "Customer Hub":
     st.header("Customer Intelligence & Churn Prediction")
 
-    recency = st.number_input("Recency", 10)
-    frequency = st.number_input("Frequency", 5)
-    monetary = st.number_input("Monetary", 500)
+    recency = st.number_input("Recency", value=10)
+    frequency = st.number_input("Frequency", value=5)
+    monetary = st.number_input("Monetary", value=500)
 
     if st.button("Predict Churn"):
 
@@ -114,55 +118,54 @@ elif page == "👥 Customer Hub":
         API_URL = "https://neuralretail-ai-platform.onrender.com"
 
         try:
-            with st.spinner("🧠 AI model analyzing customer behavior..."):
+            with st.spinner("Analyzing customer behavior..."):
                 response = requests.post(
                     f"{API_URL}/predict/churn",
-                    json=payload
+                    json=payload,
+                    timeout=10
                 )
 
             result = response.json()
 
-            if result.get("prediction") == 1:
-                st.error("⚠ High Risk Customer Detected")
+            if result.get("churn_prediction") == 1:
+                st.error("⚠ High Risk Customer")
 
                 st.markdown("""
-                ### Recommended Action:
-                - Send discount offer (10–20%)
-                - Run re-engagement campaign
-                - Add to recovery segment
+                **Recommended Actions:**
+                - Discount campaign (10–20%)
+                - Re-engagement marketing
+                - Recovery segmentation
                 """)
+
             else:
                 st.success("Low Risk Customer")
 
                 st.markdown("""
-                ### Recommended Action:
+                **Recommended Actions:**
                 - Upsell premium products
-                - Maintain engagement
-                - Offer loyalty rewards
+                - Loyalty rewards
+                - Engagement retention
                 """)
 
         except Exception as e:
             st.error(f"API Error: {e}")
+
 # ---------------- INVENTORY ----------------
-elif page == "📦 Inventory":
+elif page == "Inventory":
     st.header("Inventory Insights")
 
     stock = daily_sales.groupby("InvoiceDate")["TotalPrice"].sum()
 
-    st.markdown("### Stock Movement Trend")
-
     st.line_chart(stock)
-    st.success("Stock levels are stable with no critical shortages detected.")
 
 # ---------------- MLOPS ----------------
-elif page == "🧠 MLOps Monitor":
-    st.header("Model Monitoring Dashboard")
+elif page == "MLOps Monitor":
+    st.header("Model Monitoring")
 
     col1, col2, col3 = st.columns(3)
 
-    col1.metric("PSI Score", 0.12)
+    col1.metric("PSI Score", "0.12")
     col2.metric("MAPE", "8.5%")
     col3.metric("Model Status", "Healthy")
-    st.success("System is healthy and model performance is within acceptable range.")
 
-    st.success("All systems operational ✔")
+    st.success("System operational ✔")
