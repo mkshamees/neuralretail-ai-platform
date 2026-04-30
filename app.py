@@ -33,22 +33,22 @@ st.sidebar.info("AI-powered Retail Intelligence System")
 # ---------------- LOAD DATA ----------------
 @st.cache_data
 def load_data():
-    import os
+    try:
+        sales = pd.read_csv("data/retail_features.csv")
+        rfm = pd.read_csv("data/rfm_table.csv")
+        sales["InvoiceDate"] = pd.to_datetime(sales["InvoiceDate"])
+        return sales, rfm
+    except:
+        st.warning("Using fallback demo data")
 
-    base = "data"
-    sales_path = os.path.join(base, "retail_features.csv")
-    rfm_path = os.path.join(base, "rfm_table.csv")
+        sales = pd.DataFrame({
+            "InvoiceDate": pd.date_range("2024-01-01", periods=10),
+            "TotalPrice": [100,120,90,300,250,400,350,500,450,600]
+        })
 
-    if not os.path.exists(sales_path):
-        st.error("Missing retail_features.csv")
-        return pd.DataFrame(), pd.DataFrame()
+        rfm = pd.DataFrame({"CustomerID": range(10)})
 
-    sales = pd.read_csv(sales_path)
-    rfm = pd.read_csv(rfm_path)
-
-    sales["InvoiceDate"] = pd.to_datetime(sales["InvoiceDate"])
-
-    return sales, rfm
+        return sales, rfm
 # ----------------  ----------------
 daily_sales, rfm = load_data()
 
