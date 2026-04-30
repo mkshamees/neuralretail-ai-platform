@@ -54,7 +54,14 @@ daily_sales, rfm = load_data()
 
 if daily_sales.empty or rfm.empty:
     st.warning("⚠ Data not loaded properly. Check data folder.")
-    st.stop()
+    st.warning("⚠ Running in demo mode (data missing on server)")
+
+daily_sales = pd.DataFrame({
+    "InvoiceDate": pd.date_range("2024-01-01", periods=10),
+    "TotalPrice": [100,120,90,300,250,400,350,500,450,600]
+})
+
+rfm = pd.DataFrame({"CustomerID": range(10)})
 
 # ---------------- EXECUTIVE ----------------
 if page == "Executive Overview":
