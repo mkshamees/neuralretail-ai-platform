@@ -6,16 +6,18 @@ import requests
 import plotly.express as px
 
 st.set_page_config(
-    st.markdown(
+    page_title="NeuralRetail AI Platform",
+    layout="wide",
+    initial_sidebar_state="expanded"
+)
+
+# ---------- LIGHT MODE FIX ----------
+st.markdown(
     """
     <style>
         .stApp {
             background-color: white;
             color: black;
-        }
-
-        .css-1d391kg, .css-1lcbmhc {
-            background-color: #f5f5f5;
         }
 
         h1, h2, h3, h4, h5, h6, p {
@@ -26,24 +28,7 @@ st.set_page_config(
     unsafe_allow_html=True
 )
 
-    page_title="NeuralRetail AI Platform",
-    layout="wide",
-    initial_sidebar_state="expanded"
-)
-
-st.markdown("""
-    <style>
-        .main-title {
-            font-size: 36px;
-            font-weight: bold;
-            color: #1f77b4;
-        }
-        .sub-text {
-            font-size: 16px;
-            color: gray;
-        }
-    </style>
-""", unsafe_allow_html=True)
+st.title("📊 NeuralRetail AI Platform")
 
 st.markdown('<div class="main-title">📊 NeuralRetail AI Platform</div>', unsafe_allow_html=True)
 st.markdown('<div class="sub-text">End-to-End AI Sales Intelligence & Customer Analytics System</div>', unsafe_allow_html=True)
