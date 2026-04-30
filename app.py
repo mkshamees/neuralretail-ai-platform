@@ -158,7 +158,7 @@ elif page == "Customer Hub":
 
             result = response.json()
 
-            if result.get("prediction") == 1:
+    if result.get("prediction") == 1:
     st.error("⚠ High Risk Customer Detected")
 
     st.markdown("""
