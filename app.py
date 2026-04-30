@@ -63,16 +63,17 @@ elif page == "Customer Hub":
             "monetary": monetary
         }
 
-        try:
-           API_URL = "https://neuralretail-ai-platform.onrender.com"
+        API_URL = "https://neuralretail-ai-platform.onrender.com"
 
-response = requests.post(
-    f"{API_URL}/predict/churn",
-    json=payload
-)
+        try:
+            response = requests.post(
+                f"{API_URL}/predict/churn",
+                json=payload
+            )
+
             result = response.json()
 
-            if result["churn_prediction"] == 1:
+            if result.get("prediction") == 1:
                 st.error("⚠ High Risk Customer")
             else:
                 st.success("Low Risk Customer")
