@@ -175,9 +175,8 @@ elif page == "Customer Hub":
             - Maintain engagement
             - Offer loyalty rewards
             """)
-
-        except Exception as e:
-            st.error(f"API Error: {e}")
+    except Exception as e:
+       st.error(f"API Error: {e}")
 
 # ---------------- INVENTORY ----------------
 elif page == "Inventory":
