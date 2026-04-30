@@ -5,11 +5,11 @@ import joblib
 import requests
 import plotly.express as px
 
-st.set_page_config(
+    st.set_page_config(
     
-st.sidebar.title("📊 NeuralRetail AI")
+    st.sidebar.title("📊 NeuralRetail AI")
 
-st.sidebar.markdown("---")
+    st.sidebar.markdown("---")
 
 page = st.sidebar.radio(
     "Navigation",
