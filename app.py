@@ -6,6 +6,26 @@ import requests
 import plotly.express as px
 
 st.set_page_config(
+    st.markdown(
+    """
+    <style>
+        .stApp {
+            background-color: white;
+            color: black;
+        }
+
+        .css-1d391kg, .css-1lcbmhc {
+            background-color: #f5f5f5;
+        }
+
+        h1, h2, h3, h4, h5, h6, p {
+            color: black !important;
+        }
+    </style>
+    """,
+    unsafe_allow_html=True
+)
+
     page_title="NeuralRetail AI Platform",
     layout="wide",
     initial_sidebar_state="expanded"
