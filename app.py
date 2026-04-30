@@ -146,7 +146,7 @@ elif page == "Customer Hub":
             "frequency": frequency,
             "monetary": monetary
         }
-     API_URL = "https://neuralretail-ai-platform.onrender.com"
+    API_URL = "https://neuralretail-ai-platform.onrender.com"
 
     try:
         with st.spinner("🧠 AI model analyzing customer behavior..."):
