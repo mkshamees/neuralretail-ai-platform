@@ -139,6 +139,28 @@ elif page == "Customer Hub":
                 )
 
             result = response.json()
+            importance = result.get("feature_importance", {})
+
+if importance:
+    st.subheader("Why this prediction?")
+
+    import pandas as pd
+    import plotly.express as px
+
+    df_imp = pd.DataFrame({
+        "Feature": list(importance.keys()),
+        "Importance": list(importance.values())
+    })
+
+    fig = px.bar(
+        df_imp,
+        x="Feature",
+        y="Importance",
+        title="Feature Importance"
+    )
+
+    st.plotly_chart(fig, use_container_width=True)
+    
             st.success("Prediction completed successfully")
 
             if result.get("churn_prediction") == 1:
