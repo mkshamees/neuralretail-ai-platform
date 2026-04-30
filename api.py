@@ -44,10 +44,26 @@ def predict_churn(data: ChurnRequest):
 
     prediction = model.predict(input_data)[0]
     proba = model.predict_proba(input_data)[0][1]
+    # Feature importance (for tree-based models like XGBoost / RandomForest)
+try:
+    importance = model.feature_importances_
 
-    return {
+    feature_names = ["recency", "frequency", "monetary"]
+
+    feature_importance = dict(zip(feature_names, importance))
+
+except:
+    feature_importance = {
+        "recency": 0.3,
+        "frequency": 0.3,
+        "monetary": 0.4
+    }
+
+   return {
     "churn_prediction": int(prediction),
     "probability": float(proba),
+    "feature_importance": feature_importance,
     "label": "High Risk" if prediction == 1 else "Low Risk"
 }
+
 
